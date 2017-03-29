@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-
+//fisier"editat"
 module counter_tb;
 
 // define system frequency in MHz
