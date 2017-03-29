@@ -82,7 +82,6 @@ always @(posedge tb_clk) begin
 	end
 end
 
-// verifier - explected values
 always @(posedge tb_clk) begin
 	if (!tb_reset_) begin
 		$display("[%0d] In reset!\n", $realtime);
