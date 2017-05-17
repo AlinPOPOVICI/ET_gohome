@@ -27,10 +27,10 @@ module display_fourdigit(
     );
 	 
 	 input [5:0] minute;
-    input [4:0] ore;
+	 input [4:0] ore;
 	 input clock;
-    output [3:0] digit_select;
-    output [6:0] digit_display;
+   	 output [3:0] digit_select;
+    	 output [6:0] digit_display;
 	 
 	 reg [3:0] digit_select;
 	 
