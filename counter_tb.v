@@ -33,8 +33,6 @@ module conuter_timp_tb;
 	reg load_2;
 	reg clock;
 	reg reset;
-	reg s12;
-	reg s3;
 	wire [4:0]	out_ore;
 	wire [5:0] out_minute;
 
@@ -49,9 +47,7 @@ module conuter_timp_tb;
 		.out_ore(out_ore),
 		.out_minute(out_minute),
 		.clock(clock), 
-		.reset(reset), 
-		.s12(s12), 
-		.s3(s3)
+		.reset(reset)
 	);
 
 	initial begin
@@ -63,8 +59,7 @@ module conuter_timp_tb;
 		load_1 = 0;
 		load_2 = 0;
 		clock = 0;
-		s12 = 0;
-		s3 = 0;
+
 		forever begin
 		#1 clock = ~clock;
 		end
