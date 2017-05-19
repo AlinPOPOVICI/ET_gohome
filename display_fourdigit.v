@@ -27,10 +27,10 @@ module display_fourdigit(
     );
 	 
 	 input [5:0] minute;
-	 input [4:0] ore;
+    input [4:0] ore;
 	 input clock;
-   	 output [3:0] digit_select;
-    	 output [6:0] digit_display;
+    output [3:0] digit_select;
+    output [6:0] digit_display;
 	 
 	 reg [3:0] digit_select;
 	 
@@ -52,53 +52,53 @@ module display_fourdigit(
 	 end
 	 
 	 
-	 always@(posedge clock) begin
+	 always@(*) begin
 		case(counter)
 		
 		'd0:begin 
-			digit_select <= 4'b0111;
+			digit_select = 4'b0111;
 			if(ore < 'd10) begin
-				digit_value <= 'd0;
+				digit_value = 'd0;
 			end else begin
 				if(ore < 'd20) begin
-					digit_value <= 'd1;
+					digit_value = 'd1;
 				end else begin
-					digit_value <= 'd2;
+					digit_value = 'd2;
 				end
 			end		
 		end
 		
 		'd1:begin 
-			digit_select <= 4'b1011;
+			digit_select = 4'b1011;
 			if(ore < 'd10) begin
-				digit_value <= ore[3:0] ;
+				digit_value = ore[3:0] ;
 			end else begin
 				if(ore < 'd20) begin
-					digit_value <= ore - 'd10;
+					digit_value = ore - 'd10;
 				end else begin
-					digit_value <= ore - 'd20;
+					digit_value = ore - 'd20;
 				end
 			end		
 		end
 		
 		'd2:begin
-			digit_select <= 4'b1101;
+			digit_select = 4'b1101;
 			if(minute <= 'd10) begin
-				digit_value <= 'd0;
+				digit_value = 'd0;
 			end else begin
 				if(minute <= 'd20) begin
-					digit_value <= 'd1;
+					digit_value = 'd1;
 				end else begin
 					if(minute < 'd30) begin
-						digit_value <= 'd2;
+						digit_value = 'd2;
 				   end else begin
 						if(minute < 'd40)begin
-							digit_value <= 'd3;
+							digit_value = 'd3;
 						end else begin
 							if(minute < 'd50) begin
-								digit_value <= 'd4;
+								digit_value = 'd4;
 							end else begin
-								digit_value <= 'd5;
+								digit_value = 'd5;
 							end		
 						end
 					end
@@ -107,23 +107,23 @@ module display_fourdigit(
 		end
 		
 		'd3:begin
-			digit_select <= 4'b1110;	
+			digit_select = 4'b1110;	
 			if(minute <= 'd10) begin
-				digit_value <= minute[3:0];
+				digit_value = minute[3:0];
 			end else begin
 				if(minute <= 'd20) begin
-					digit_value <= minute - 'd10;
+					digit_value = minute - 'd10;
 				end else begin
 					if(minute < 'd30) begin
-						digit_value <= minute - 'd20;
+						digit_value = minute - 'd20;
 				   end else begin
 						if(minute < 'd40)begin
-							digit_value <= minute - 'd30;
+							digit_value = minute - 'd30;
 						end else begin
 							if(minute < 'd50) begin
-								digit_value <= minute - 'd40;
+								digit_value = minute - 'd40;
 							end else begin
-								digit_value <= minute - 'd50;
+								digit_value = minute - 'd50;
 							end		
 						end
 					end
