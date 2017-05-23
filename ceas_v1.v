@@ -88,4 +88,17 @@ setare S(
 	 .load_alarma(load_alarma),
 	 .load_timp(load_timp_manual)
     );
+	 
+alarma_top A( // nu merge complet cum trebuie 
+	 .clock(clock),
+	 .reset(reset),
+	 .minute_counter(minute_counter_out),
+	 .ore_counter(ore_counter_out),
+	 .load(load_alarma),        
+	 .minute_setare(minute_setare_out),
+	 .ore_setare(ore_setare_out),
+	 .stop(semnal_stop),         
+	 .led(led)
+    );	 
+	 
 endmodule
