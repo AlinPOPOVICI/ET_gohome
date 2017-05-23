@@ -40,9 +40,12 @@ module alarma_top(
 	output led;
 
 	reg [5:0]minute_alarma;
+	reg [5:0]minute_alarma_i;
 	reg [4:0]ore_alarma;
-	reg semnal; //semnal daca suna 
-   
+	reg [4:0]ore_alarma_i;
+	reg semnal;	//semnal daca suna 
+   reg semnal_i;
+	
 	suna S(
 	.clock(clock),
 	.semnal(semnal),
@@ -50,6 +53,9 @@ module alarma_top(
 	);
 	
 	always@(*) begin
+		minute_alarma = minute_alarma_i;
+		ore_alarma = ore_alarma_i;
+		semnal = semnal_i;		
 		if(load == 'd1) begin
 			minute_alarma = minute_setare;
 			ore_alarma = ore_setare;
@@ -81,10 +87,15 @@ module alarma_top(
 
 	always@(posedge clock)begin 
 		if(reset == 'd1 || stop == 'd1) begin
-			minute_alarma <= 6'b111111;
-			ore_alarma <= 5'b11111;
-			semnal <= 'd0;
+			minute_alarma_i <= 6'b111111;
+			ore_alarma_i <= 5'b11111;
+			semnal_i <= 'd0;
+		end else begin
+			minute_alarma_i <= minute_alarma;
+			ore_alarma_i <= ore_alarma;
+			semnal_i <= semnal;
 		end
+		
 	end
 	
 	endmodule
