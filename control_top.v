@@ -89,57 +89,62 @@ module control_top(
 		end
 	end */
 	
-	always@(posedge clock) begin
+	always@(*) begin
 		if(semnal_setare == 0 && semnal_setare_a == 0) begin
 			if(b1_d) begin
 				if(counter == 4'b1111) begin
-					counter <= 'd0;
-					semnal_setare <= 1;
+					counter = 'd0;
+					semnal_setare = 1;
 				end else begin
-					counter <= counter + 1'b1;
+					counter = counter + 1'b1;
 				end
 			end else begin
 				if(b2_d) begin
 					if(counter == 4'b1111) begin
-						counter <= 'd0;
-						semnal_setare_a <= 1;
+						counter = 'd0;
+						semnal_setare_a = 1;
 					end else begin
-						counter <= counter + 1'b1;
+						counter = counter + 1'b1;
 					end
 				end	
 			end
 		end else begin 
 			if(b3_d) begin
 				if(counter == 4'b1111) begin
-					counter <= 'd0;
-					semnal_setare <= 0;
-					semnal_setare_a <=0;
-					semnal_stop <= 1;
+					counter = 'd0;
+					semnal_setare = 0;
+					semnal_setare_a =0;
+					semnal_stop = 1;
 				end else begin
-					counter <= counter + 1'b1;
+					counter = counter + 1'b1;
 				end	
 			end else begin
 				if(b2_d) begin    // counter mai mic pentru apasari scurte 
-					semnal_b2 <= 1;
+					semnal_b2 = 1;
 				end else begin
-					semnal_b2 <= 0;
+					semnal_b2 = 0;
 					if(b1_d) begin
-						semnal_b1 <= 1;
+						semnal_b1 = 1;
 					end else begin
-						semnal_b1 <= 0;
+						semnal_b1 = 0;
 					end
 				end
 			end
 		end
 		
 		if(counter == counter2 + 'd1) begin // resetare counter daca nu se mai apasa butonul 
-			counter2 <= counter;             // inca nu am rezolvat problema cu apasare consecutiva 
+			counter2 = counter;             // inca nu am rezolvat problema cu apasare consecutiva 
 		end else begin
-			counter <= 'd0;
-			counter2 <= 'd0;
+			counter = 'd0;
+			counter2 = 'd0;
+			
 		end
 	end
 	always@(posedge clock) begin
-		semnal_stop <= 0;
-	
+		if(reset == 'd1)begin
+		
+		end else begin
+		end
+
+	end
 endmodule
