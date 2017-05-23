@@ -21,47 +21,48 @@
 
 //litere micic ! !!
 module uart_top(
-			 reset,
-			 i_clock,
-          i_rx_serial,
-	  		 minute,
-	   	 ore,
-	       load	
-	 );
-	input 		 reset;
-   input        i_clock;
-   input        i_rx_serial;
-	output  	 	 [5:0] minute;
-	output   	 [4:0] ore;
-	output       load;	 
-	 
-	reg [1:0] count;
-	reg [1:0] count_c;	//00 asteapta //01 primit start //10 primit ore //11 primit minute  
-	reg [4:0] ore_iner;
-	reg [5:0] minute_iner;
-	reg       i_rx_dv;
-	reg       rx_dv;
-   reg [7:0] i_rx_byte;
-	reg [7:0] rx_byte;
-
+        reset,
+        clock,
+        i_rx_serial,
+        minute,
+        ore,
+        load	
+);
+    input reset;
+    input clock;
+    input i_rx_serial;
+    output [5:0] minute;
+    output [4:0] ore;
+    output load;	 
+    
+    reg [1:0] count;
+    reg [1:0] count_c;	//00 asteapta //01 primit start //10 primit ore //11 primit minute  
+    reg [4:0] ore_iner;
+    reg [5:0] minute_iner;
+	 reg [4:0] ore;
+    reg [5:0] minute;
+    reg i_rx_dv;
+    wire rx_dv;
+    reg [7:0] i_rx_byte;
+    wire[7:0] rx_byte;
+	 reg load = 'd0; // dupa load va primi un reset dupa "n" clock  sau pus instant pe 0 daca merge (la tranzitie  11->00) 
 
 uart U1(
-     .i_clock(i_clock),
-     .i_rx_serial(i_rx_serial),
-     .o_rx_dv(rx_dv),
-     .o_rx_byte(rx_byte)
+    .i_clock(clock),
+    .i_rx_serial(i_rx_serial),
+    .i_rx_dv(rx_dv),
+    .i_rx_byte(rx_byte)
 );
 
 always@(posedge clock) begin
 	if(reset == 1) begin
 	    ore <= 'd0;
-		 minute <= 'd0;
-		 count <='d0;
-		 load <= 'd0; // dupa load va primi un reset dupa "n" clock  sau pus instant pe 0 daca merge (la tranzitie  11->00) 
+        minute <= 'd0;
+        count <='d0;
 	// urmeaza si altele
 	end else begin
 		count <= count_c;
-		i_rx_dc <= rx_dv;
+		i_rx_dv <= rx_dv;
 		i_rx_byte <= rx_byte;// nu cred ca ii necesar dar nu cred ca impiedica 
 		if(load == 'd1) begin
 			ore <= ore_iner;
@@ -80,7 +81,7 @@ always@(*) begin
 			if(i_rx_dv == 'd0)begin
 				count_c = 'd0;
 			end else begin 
-				if(i_rx_byte = 8'hff) begin
+				if(i_rx_byte == 8'hff) begin
 					count_c ='d1;
 				end
 			end 
@@ -114,14 +115,13 @@ always@(*) begin
 			if(i_rx_dv == 'd0)begin
 				count_c = 'd3;
 			end else begin 
-				if(i_rx_byte = 8'hff) begin
+				if(i_rx_byte == 8'hff) begin
 					count_c ='d0;
 					load = 'd1;
 				end
  			end 
 		end
-	default :
-          count = 'd0; 
+	default :count = 'd0; 
 	endcase
 end
 
