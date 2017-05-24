@@ -29,20 +29,20 @@ module display(
     digit_display
     );
 	 
-	 input [5:0] minute;
-    input [4:0] ore;
-	 input [5:0] minute_setare;
-    input [4:0] ore_setare;
-	 input semnal_setare;
-	 input clock;
-    output [3:0] digit_select;
-    output [6:0] digit_display;
+	input [5:0] minute;
+    	input [4:0] ore;
+	input [5:0] minute_setare;
+   	input [4:0] ore_setare;
+	input semnal_setare;
+	input clock;
+    	output [3:0] digit_select;
+    	output [6:0] digit_display;
 	 
 	 reg [4:0] ore_i;
 	 reg [5:0] minute_i;
 	 
 	always@(posedge clock) begin
-	 if(semnal_setare) begin
+		if(semnal_setare) begin  // mai bine cu assign 
 		ore_i <= ore_setare;
 		minute_i <= minute_setare;
 	 end else begin
@@ -54,10 +54,10 @@ module display(
 	 
 	 display_fourdigit f2(
 	 .minute(minute_i),
-    .ore(ore_i),
+    	 .ore(ore_i),
 	 .clock(clock),
-    .digit_select(digit_select),
-    .digit_display(digit_display)
+         .digit_select(digit_select),
+         .digit_display(digit_display)
 	 );
 
 
