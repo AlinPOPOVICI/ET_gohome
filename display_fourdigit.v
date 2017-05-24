@@ -37,12 +37,12 @@ module display_fourdigit(
 	 reg [3:0] digit_value;
 	 reg [1:0] counter;
 	 
-	 initial begin
+	 initial begin //   la reset  flipflop
 	 counter <= 'd0;
  	 end
 	 
 	 always@(posedge clock) 
-	 begin : SELECT	 
+	 begin	 
 	 if(counter == 'd3) begin
 		counter <= 'd0;
 		end
