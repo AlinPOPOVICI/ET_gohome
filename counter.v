@@ -23,10 +23,10 @@ module counter_timp(
 	  timp_minute1, 
 	  timp_ore2,
 	  timp_minute2,
-	  out_ore,
-	  out_minute,
-	  load_1,
-          load_2,
+	  ore,
+	  minute,
+     load_1,   // pt setare manuala
+     load_2,	//pt setare uart
 	  clock,
 	  reset
     );
@@ -40,8 +40,8 @@ module counter_timp(
 	 input reset;
 
 	 
-	 output [4:0] out_ore;
-	 output [5:0] out_minute;
+	 output [4:0] ore;
+	 output [5:0] minute;
 	 
 	 reg [4:0] out_ore;
 	 reg [5:0] out_minute;
@@ -83,13 +83,13 @@ always @ (posedge clock) begin
     end
 	 
     else if (load_1 == 1'b1) begin
-       		  ore <=    timp_ore1;
+        ore <=    timp_ore1;
 		  minute <=  timp_minute1;
 		  durata_m <=  'd0;
     end
 	 
 	 else if (load_2 == 1'b1) begin
-       		  ore <=    timp_ore2;
+        ore <=    timp_ore2;
 		  minute <=  timp_minute2;
 		  durata_m <= 'd0;
     end else begin
