@@ -45,49 +45,22 @@ module setare(  //poate trebuie sa pun semnalul de enable de la asisaj sa fie ca
 	output load_timp;
 	
 	
-	reg [4:0] out_ore;          
-	reg [5:0] out_minute;
+
 	reg [4:0] ore;          
 	reg [5:0] minute;
 	reg load_alarma;   
 	reg load_timp;
 	
 	
-	always@(posedge semnal_b2) begin
-	//manipulare timp in functie de butoane 
-		out_minute = minute;
-		if((semnal_setare || semnal_setare_a)&& !semnal_stop) begin	
-				if(minute == 'd59) begin
-					out_minute = 'd0;
-				end else begin
-					out_minute = out_minute + 'd1;
-				end
-		end
 	
-		// setare semnal de load potrivit 	
-	
-		
-	end		
-	always@(posedge semnal_b1)begin
-		out_ore = ore;
-		if((semnal_setare || semnal_setare_a)&& !semnal_stop) begin
-			if(ore == 'd23) begin
-				out_ore = 'd0;
-			end else begin
-				out_ore = out_ore + 'd1;
-			end		
-		end
-	end
-	
-always@(posedge clock)begin
+			
+	always@(negedge clock)begin
 	if(reset == 'd1)begin
 		ore <= 'd0;
 		minute <= 'd0;
 		load_alarma <= 'd0;
 		load_timp <= 'd0;
 	end else begin	
-		minute <= out_minute;
-		ore <= out_ore;
 		// setare semnal de load potrivit 
 		if(semnal_stop) begin
 				if(semnal_setare) begin
@@ -97,11 +70,28 @@ always@(posedge clock)begin
 						load_alarma <= 'd1;
 					end	
 				end
-		end	
-	end
+		end else begin 
+			load_alarma <= 'd0;     // semanlul de stop ii doar pe un clock si astfel dupa ce si-a dat deja load sa nu intre in loop 
+			load_timp <= 'd0;
+			if(semnal_b1) begin
+				if(ore == 'd23) begin
+					ore <= 'd0;
+				end else begin
+					ore <= ore + 'd1;
+				end		
+			end 
+			if(semnal_b2) begin
+				if(minute == 'd59) begin
+					minute <= 'd0;
+				end else begin
+					minute <= minute + 'd1;
+				end
+			end
+		end
+	end	
+
 	
-end			
-		
+end	
 	
 
 
