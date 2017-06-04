@@ -68,7 +68,6 @@ module setare_tb;
 		#2 semnal_b2 = ~semnal_b2;
 		end
 		// Wait 100 ns for global reset to finish
-		#10;
         
 		// Add stimulus here
 
@@ -77,7 +76,7 @@ module setare_tb;
 	initial begin
 		reset = 1;
 		#10 reset =0;	
-		#10 semnal_setare = 1;
+		#100 semnal_setare = 1;
 		#100 semnal_stop = 1;
 	end
 	
