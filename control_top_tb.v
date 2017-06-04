@@ -38,7 +38,7 @@ module control_top_tb;
 	wire semnal_b1;
 	wire semnal_b2;
 	wire led;
-	wire semnal_reset;
+
 
 	// Instantiate the Unit Under Test (UUT)
 	control_top uut (
@@ -52,8 +52,7 @@ module control_top_tb;
 		.semnal_stop(semnal_stop), 
 		.semnal_b1(semnal_b1), 
 		.semnal_b2(semnal_b2), 
-		.led(led), 
-		.semnal_reset(semnal_reset)
+		.led(led)
 	);
 
 	initial begin
@@ -65,12 +64,53 @@ module control_top_tb;
 		b3 = 0;
 		forever begin
 		#1 clock <= ~clock;
+		end
+		end
 		// Wait 100 ns for global reset to finish
-		#100;
+		initial begin
+		#100 reset = 1;
+		#200 reset = 0;
+		#5 b1 = 1;
+		#2 b1 = 0;
+		#2 b1 = 1;
+		#2 b1 = 0;
+		#2 b1 = 1;
+		#12 b1 = 0;
+		#2 b1 = 1;
+		#20 b1 = 0;
+		#20 b1 = 1;
+		#50 b1 = 0;
+		#20 b1 = 1;
+		#20 b1 = 0;
+		#20 b1 = 1;
+		#20 b1 = 0;
+		#50 b1 = 1;
+		#5 b2 = 1;
+		#2 b2 = 0;
+		#2 b2 = 1;
+		#2 b2 = 0;
+		#2 b2 = 1;
+		#12 b2 = 0;
+		#2 b2 = 1;
+		#20 b2 = 0;
+		#20 b2 = 1;
+		#50 b2 = 0;
+		#5 b3 = 1;
+		#2 b3 = 0;
+		#2 b3 = 1;
+		#2 b3 = 0;
+		#2 b3 = 1;
+		#12 b3 = 0;
+		#2 b3 = 1;
+		#20 b3 = 0;
+		#20 b3 = 1;
+		#50 b3 = 0;
+		end
+        
         
 		// Add stimulus here
 
-	end
+
       
 endmodule
 
