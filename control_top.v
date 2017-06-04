@@ -29,10 +29,8 @@ module control_top(
 	semnal_stop,
 	semnal_b1,
 	semnal_b2,
-	led,
-	semnal_reset
+	led
     );
-	 
 	 
 	 input clock;
 	 input reset;
@@ -45,7 +43,6 @@ module control_top(
 	 output semnal_b1;
 	 output semnal_b2;
 	 output led;
-	 output semnal_reset;
 	 
 	 reg semnal_setare = 'd0;
 	 reg semnal_setare_a = 'd0;
@@ -53,98 +50,111 @@ module control_top(
 	 reg semnal_b1 = 'd0;
 	 reg semnal_b2 = 'd0;	 
 	 
-	 reg [3:0] counter = 'd0; //in loc de 3 minim 15 (pt ca 7 la debounce)
-	 reg [3:0] counter2 = 'd0;	 //trebuie marit in functie de clock si durata care o vreu sa o inregistreze la buton la apasare lunga/scurta 
-									// cand pun alarma mai trebuie un semnal de oprire alarma si un input daca "suna alarma"
-	 wire b1_d;
-	 wire b2_d;
-	 wire b3_d;
+	 wire lung_1;
+	 wire lung_2;
+	 wire lung_3;
+	 wire scurt_1;
+	 wire scurt_2;
+	 wire scurt_3;
 	 
-	/* initial begin
-	 counter = 'd0;
-	 counter2 = 'd0;
-	 end
-	 */
-	 
-	 debounce d1(
-	 .pb(b1),
-	 .clock(clock),
-	 .semnal(b1_d));
-	 
-	 debounce d2(
-	 .pb(b2),
-	 .clock(clock),
-	 .semnal(b2_d));
-	 
-	 debounce d3(
-	 .pb(b3),
-	 .clock(clock),
-	 .semnal(b3_d));
-	 
-	/* always@(posedge clock) begin
-		if(counter == 4'b1111) begin
-			counter <= 'd0;
-		end else begin
-			counter <= counter + 1'b1;
-		end
-	end */
+	parameter S_ID  = 2'b00; //sates
+	parameter S_CE = 2'b01;
+	parameter S_AL = 2'b10;
+	parameter S_ST = 2'b11;
+
+
+	reg [1:0] S_MAIN;
+
+	semnale_peclock PC(
+	.clock(clock),
+	.reset(reset), // de la un switch 
+	.b1(b1),
+	.b2(b2),
+	.b3(b3),
+	.lung_1(lung_1),
+	.lung_2(lung_2),
+	.lung_3(lung_3),
+	.scurt_1(scurt_1),
+	.scurt_2(scurt_2),
+	.scurt_3(scurt_3)
+ );
 	
-	always@(*) begin
-		if(semnal_setare == 0 && semnal_setare_a == 0) begin
-			if(b1_d) begin
-				if(counter == 4'b1111) begin
-					counter = 'd0;
-					semnal_setare = 1;
-				end else begin
-					counter = counter + 1'b1;
-				end
-			end else begin
-				if(b2_d) begin
-					if(counter == 4'b1111) begin
-						counter = 'd0;
-						semnal_setare_a = 1;
-					end else begin
-						counter = counter + 1'b1;
-					end
-				end	
-			end
-		end else begin 
-			if(b3_d) begin
-				if(counter == 4'b1111) begin
-					counter = 'd0;
-					semnal_setare = 0;
-					semnal_setare_a =0;
-					semnal_stop = 1;
-				end else begin
-					counter = counter + 1'b1;
-				end	
-			end else begin
-				if(b2_d) begin    // counter mai mic pentru apasari scurte 
-					semnal_b2 = 1;
-				end else begin
-					semnal_b2 = 0;
-					if(b1_d) begin
-						semnal_b1 = 1;
-					end else begin
-						semnal_b1 = 0;
-					end
-				end
-			end
-		end
-		
-		if(counter == counter2 + 'd1) begin // resetare counter daca nu se mai apasa butonul 
-			counter2 = counter;             // inca nu am rezolvat problema cu apasare consecutiva 
-		end else begin
-			counter = 'd0;
-			counter2 = 'd0;
-			
-		end
-	end
 	always@(posedge clock) begin
 		if(reset == 'd1)begin
-		
+			semnal_setare <= 'd0;
+			semnal_setare_a <= 'd0;
+			semnal_stop <= 'd0;
+			semnal_b1 <= 'd0;
+			semnal_b2 <= 'd0;
+			S_MAIN <= S_ID;
 		end else begin
+		
+		case(S_MAIN) 
+		S_ID:begin
+			led <= 0;
+			semnal_stop <= 'd0;
+			semnal_setare <= 'd0;
+			semnal_setare_a <= 'd0;
+			semnal_b1 <= 'd0;
+			semnal_b2 <= 'd0;
+			if(lung_1 == 'd1)begin
+				S_MAIN <= S_CE;
+			end else begin
+				if(lung_2 == 'd1) begin
+					S_MAIN<= S_AL;
+				end
+			end	
 		end
-
+			
+		S_CE:begin
+			semnal_setare <= 'd1;
+			if(lung_3 == 'd1)begin
+				led <= 1;
+				semnal_stop <= 'd1;
+				S_MAIN <= S_ID;
+			end else begin
+				if(lung_1 == 'd1 || scurt_1 == 'd1)begin
+					semnal_b2 <= 'd1;
+					S_MAIN <= S_CE;
+				end else begin
+					if(lung_2 == 'd1 || scurt_2 == 'd1) begin
+						semnal_b2 <= 'd1;
+						S_MAIN <= S_CE;
+					end else begin
+						semnal_b1 <= 'd0;
+						semnal_b2 <= 'd0;
+					end
+				end	
+			end
+		end
+		
+		S_AL:begin
+			semnal_setare_a <= 'd1;
+			if(lung_3 == 'd1)begin
+				semnal_stop <= 'd1;
+				S_MAIN <= S_ID;
+			end else begin
+				if(lung_1 == 'd1 || scurt_1 == 'd1)begin
+					semnal_b2 <= 'd1;
+					S_MAIN <= S_AL;
+				end else begin
+					if(lung_2 == 'd1 || scurt_2 == 'd1) begin
+						semnal_b2 <= 'd1;
+						S_MAIN <= S_AL;
+					end else begin
+						semnal_b1 <= 'd0;
+						semnal_b2 <= 'd0;
+					end
+				end	
+			end
+		end
+		endcase
+	
 	end
+	end
+	
+	
+	
+
+
 endmodule
