@@ -33,8 +33,8 @@ module conuter_timp_tb;
 	reg load_2;
 	reg clock;
 	reg reset;
-	wire [4:0]	out_ore;
-	wire [5:0] out_minute;
+	wire [4:0]	ore;
+	wire [5:0] minute;
 
 	// Instantiate the Unit Under Test (UUT)
 	counter_timp uut (
@@ -44,8 +44,8 @@ module conuter_timp_tb;
 		.timp_minute2(timp_minute2), 
 		.load_1(load_1), 
 		.load_2(load_2), 
-		.out_ore(out_ore),
-		.out_minute(out_minute),
+		.ore(ore),
+		.minute(minute),
 		.clock(clock), 
 		.reset(reset)
 	);
@@ -69,6 +69,11 @@ module conuter_timp_tb;
 			reset = 1;
 			#15;
 			reset = 0;
+			#500 	timp_ore1 = 'd12;
+					timp_minute1 = 'd35;
+			#1 load_1 = 1;
+			#10 load_1 = 0;
+	
 	end
 	
 		// Wait 100 ns for global reset to finish
