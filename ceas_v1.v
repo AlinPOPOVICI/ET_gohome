@@ -22,27 +22,30 @@ module ceas_top(
 		clock,
 		reset,
 		i_rx_serial,
-		semnal_setare,
-		semnal_setare_a,
-		semnal_stop,
-		semnal_b1,
-		semnal_b2,
-		digit_select,
+		b1,
+		b2,
+		b3,
+		digit_select,      //modul control inauntru 
       digit_display,
-		led
+		led,
+		led2
     );
 		input clock;
 		input reset;
 		input i_rx_serial;
-		input semnal_setare;
-		input semnal_setare_a;
-		input semnal_stop;
-		input semnal_b1;
-		input semnal_b2;
+		input b1;
+		input b2;
+		input b3;
 		output [3:0] digit_select;
       output [6:0]digit_display;
 		output led;
+		output led2;
 
+wire semnal_setare;
+wire semnal_setare_a;
+wire semnal_stop;
+wire semnal_b1;
+wire semnal_b2;
 
 wire load_alarma;
 wire load_timp_manual;
@@ -54,13 +57,33 @@ wire [5:0] minute_counter_out;
 wire [4:0] ore_uart_out;
 wire [5:0] minute_uart_out;
 
+
+
+
+control_top C(
+	.clock(clock),
+	.reset(reset),                                               // de la un switch sau buton 
+	.b1(b1),
+	.b2(b2),
+	.b3(b3),
+	.semnal_setare(semnal_setare),
+	.semnal_setare_a(semnal_setare_a),
+	.semnal_stop(semnal_stop),
+	.semnal_b1(semnal_b1),
+	.semnal_b2(semnal_b2)
+
+);
+	 
+	 
+	 
+	 
 counter_timp CT(
      .timp_ore1(ore_setare_out),
 	  .timp_minute1(minute_setare_out), 
 	  .timp_ore2(ore_uart_out),
 	  .timp_minute2(minute_uart_out),
-	  .out_ore(ore_counter_out),
-	  .out_minute(minute_counter_out),
+	  .ore(ore_counter_out),
+	  .minute(minute_counter_out),
      .load_1(load_timp_manual),
      .load_2(load_timp_uart),
 	  .clock(clock),
@@ -74,6 +97,7 @@ display D(
 	 .minute_setare(minute_setare_out),
 	 .ore_setare(ore_setare_out),
 	 .semnal_setare(semnal_setare),
+	 .semnal_setare_a(semnal_setare_a),
 	 .clock(clock),
     .digit_select(digit_select),
     .digit_display(digit_display)
@@ -111,7 +135,8 @@ alarma_top A( // nu merge complet cum trebuie
 	 .minute_setare(minute_setare_out),
 	 .ore_setare(ore_setare_out),
 	 .stop(semnal_stop),         
-	 .led(led)
+	 .led(led),
+	 .led2(led2)
     );	 
 	 
 endmodule
