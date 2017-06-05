@@ -28,8 +28,7 @@ module control_top(
 	semnal_setare_a,
 	semnal_stop,
 	semnal_b1,
-	semnal_b2,
-	led
+	semnal_b2
     );
 	 
 	 input clock;
@@ -42,8 +41,9 @@ module control_top(
 	 output semnal_stop;
 	 output semnal_b1;
 	 output semnal_b2;
-	 output led;
+
 	 
+
 	 reg semnal_setare = 'd0;
 	 reg semnal_setare_a = 'd0;
 	 reg semnal_stop = 'd0;
@@ -62,7 +62,7 @@ module control_top(
 	parameter S_AL = 2'b10;
 	parameter S_ST = 2'b11;
 
-
+	
 	reg [1:0] S_MAIN;
 
 	semnale_peclock PC(
@@ -91,7 +91,6 @@ module control_top(
 		
 		case(S_MAIN) 
 		S_ID:begin
-			led <= 0;
 			semnal_stop <= 'd0;
 			semnal_setare <= 'd0;
 			semnal_setare_a <= 'd0;
@@ -109,12 +108,11 @@ module control_top(
 		S_CE:begin
 			semnal_setare <= 'd1;
 			if(lung_3 == 'd1)begin
-				led <= 1;
 				semnal_stop <= 'd1;
 				S_MAIN <= S_ID;
 			end else begin
 				if(lung_1 == 'd1 || scurt_1 == 'd1)begin
-					semnal_b2 <= 'd1;
+					semnal_b1 <= 'd1;
 					S_MAIN <= S_CE;
 				end else begin
 					if(lung_2 == 'd1 || scurt_2 == 'd1) begin
@@ -135,7 +133,7 @@ module control_top(
 				S_MAIN <= S_ID;
 			end else begin
 				if(lung_1 == 'd1 || scurt_1 == 'd1)begin
-					semnal_b2 <= 'd1;
+					semnal_b1 <= 'd1;
 					S_MAIN <= S_AL;
 				end else begin
 					if(lung_2 == 'd1 || scurt_2 == 'd1) begin
