@@ -73,23 +73,27 @@ module setare(  //poate trebuie sa pun semnalul de enable de la asisaj sa fie ca
 		end else begin 
 			load_alarma <= 'd0;     // semanlul de stop ii doar pe un clock si astfel dupa ce si-a dat deja load sa nu intre in loop 
 			load_timp <= 'd0;
-			if(semnal_b1) begin
-				if(ore == 'd23) begin
-					ore <= 'd0;
-				end else begin
-					ore <= ore + 'd1;
-				end		
-			end 
-			if(semnal_b2) begin
-				if(minute == 'd59) begin
-					minute <= 'd0;
-				end else begin
-					minute <= minute + 'd1;
+			if(semnal_setare == 'd1 || semnal_setare_a == 'd1) begin 
+				if(semnal_b1) begin
+					if(ore == 'd23) begin
+						ore <= 'd0;
+					end else begin
+						ore <= ore + 'd1;
+					end		
+				end 
+				if(semnal_b2) begin
+					if(minute == 'd59) begin
+						minute <= 'd0;
+					end else begin
+						minute <= minute + 'd1;
+					end
 				end
+			end else begin
+				ore <= 'd0;
+				minute <= 'd0;
 			end
-		end
-	end	
-
+		end	
+	end
 	
 end	
 	
