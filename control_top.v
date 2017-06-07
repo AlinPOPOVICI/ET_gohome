@@ -91,7 +91,11 @@ module control_top(
 		
 		case(S_MAIN) 
 		S_ID:begin
-			semnal_stop <= 'd0;
+			if(lung_3 == 'd1)begin
+				semnal_stop <= 'd1;
+			end else begin
+				semnal_stop <= 'd0;
+			end
 			semnal_setare <= 'd0;
 			semnal_setare_a <= 'd0;
 			semnal_b1 <= 'd0;
